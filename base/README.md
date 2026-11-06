@@ -1,12 +1,12 @@
-# MagiskFrida
-> [Frida](https://frida.re) is a dynamic instrumentation toolkit for developers, reverse-engineers, and security researchers
+# MagiskMorphida
+> [Morphida](https://github.com/1013503897/Morphida) is a rebuilt, polymorphic anti-detection `frida-server` for Android arm64 — same client, same version number, different binary
 
-> [MagiskFrida](https://github.com/ViRb3/magisk-frida) lets you run frida-server on boot with [Magisk](https://github.com/topjohnwu/Magisk)
+> [MagiskMorphida](https://github.com/cainiao1992/magisk-morphida) lets you run the Morphida frida-server on boot with [Magisk](https://github.com/topjohnwu/Magisk)
 
-## Supported architectures
-- `arm64`, `arm`, `x86`, `x86_64`
+## Supported architecture
+- `arm64` (Morphida only publishes arm64 builds)
 
-## How fast are frida-server updates?
-Instant! This module is hooked to the official Frida build process
+## How fast are server updates?
+Instant! This module tracks the official Morphida build process
 
-## For issues and more information, check out the [main project repo](https://github.com/ViRb3/magisk-frida)
+## For issues and more information, check out the [main project repo](https://github.com/cainiao1992/magisk-morphida)

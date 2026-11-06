@@ -21,7 +21,7 @@
 ##########################################################################################
 
 # Set to true if you do *NOT* want Magisk to mount
-# any files for you. This module runs Frida from its own bin directory.
+# any files for you. This module runs the server from its own bin directory.
 # KernelSU's new-style customize.sh does not automatically translate this
 # into a skip_mount marker, so the installer creates that marker explicitly.
 SKIPMOUNT=true
@@ -133,7 +133,7 @@ print_modname() {
   ui_print " "
   ui_print "    ********************************************"
   ui_print "    *          Magisk/KernelSU/APatch          *"
-  ui_print "    *                  Frida                   *"
+  ui_print "    *                 Morphida                 *"
   ui_print "    ********************************************"
   ui_print " "
 }
@@ -142,11 +142,8 @@ print_modname() {
 
 on_install() {
   case $ARCH in
-    arm64) F_ARCH=$ARCH;;
-    arm)   F_ARCH=$ARCH;;
-    x64)   F_ARCH=x86_64;;
-    x86)   F_ARCH=$ARCH;;
-    *)     abort "! Unsupported architecture: $ARCH";;
+    arm64) F_ARCH=arm64;;
+    *)     abort "! Unsupported architecture: $ARCH (Morphida only provides arm64)";;
   esac
 
   ui_print "- Detected architecture: $F_ARCH"
@@ -181,7 +178,7 @@ on_install() {
   F_BINDIR="$MODPATH/bin"
   mkdir -p "$F_BINDIR" || abort "! Failed to create module bin directory"
 
-  ui_print "- Installing Frida to module bin..."
+  ui_print "- Installing Morphida frida-server to module bin..."
   unzip -ojq "$ZIPFILE" "files/frida-server-$F_ARCH" -d "$F_BINDIR" \
     || abort "! Failed to extract Frida binary"
   mv -f "$F_BINDIR/frida-server-$F_ARCH" "$F_BINDIR/frida-server" \

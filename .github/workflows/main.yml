@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       force_release:
-        description: 'Force release even if no Frida update is available'
+        description: 'Force release even if no Morphida update is available'
         required: false
         default: false
         type: boolean
@@ -48,4 +48,4 @@ jobs:
         with:
           artifacts: build/*.zip,build/updater.json
           tag: "${{ env.NEW_TAG }}"
-          body: https://github.com/frida/frida/releases
+          body: https://github.com/1013503897/Morphida/releases

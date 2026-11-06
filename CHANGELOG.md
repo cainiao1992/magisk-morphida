@@ -1,1 +1,1 @@
-See [https://frida.re/news/](https://frida.re/news/) for details.
+See [https://github.com/1013503897/Morphida/releases](https://github.com/1013503897/Morphida/releases) for details.

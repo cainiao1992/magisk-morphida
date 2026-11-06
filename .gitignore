@@ -1,6 +1,7 @@
 /.vscode/
 /downloads/
 /build/
+/NEW_TAG.txt
 .DS_Store
 
 # Created by https://www.gitignore.io/api/venv,python,visualstudiocode
