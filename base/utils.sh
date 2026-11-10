@@ -27,19 +27,56 @@ get_listen_port() {
     echo "$port"
 }
 
+# Magisk's busybox netstat segfaults on some kernels and KernelSU/APatch may
+# not ship busybox at all, so read the kernel's TCP tables directly
+listen_port_hex() {
+    printf '%04X' "$(get_listen_port)"
+}
+
 is_frida_running() {
-    port="$(get_listen_port)"
-    busybox netstat -tln 2>/dev/null | grep -q ":${port} "
+    hex="$(listen_port_hex)"
+    for table in /proc/net/tcp /proc/net/tcp6; do
+        [ -r "$table" ] || continue
+        while read -r _ addr _ state _; do
+            case "$addr" in
+                *:"$hex") [ "$state" = "0A" ] && return 0 ;;
+            esac
+        done < "$table"
+    done
+    return 1
+}
+
+listen_inodes() {
+    hex="$(listen_port_hex)"
+    for table in /proc/net/tcp /proc/net/tcp6; do
+        [ -r "$table" ] || continue
+        while read -r _ addr _ state _ _ _ _ _ inode _; do
+            case "$addr" in
+                *:"$hex") [ "$state" = "0A" ] && echo "$inode" ;;
+            esac
+        done < "$table"
+    done
+}
+
+frida_pids() {
+    inodes="$(listen_inodes)"
+    [ -n "$inodes" ] || return 0
+
+    for fd in /proc/[0-9]*/fd/*; do
+        link="$(readlink "$fd" 2>/dev/null)" || continue
+        for inode in $inodes; do
+            if [ "$link" = "socket:[$inode]" ]; then
+                pid="${fd#/proc/}"
+                echo "${pid%%/*}"
+                break
+            fi
+        done
+    done | sort -u
 }
 
 stop_frida_server() {
-    port="$(get_listen_port)"
-    pids="$(busybox netstat -tlnp 2>/dev/null | grep ":${port} " | sed 's/.* \([0-9][0-9]*\)\/.*/\1/' | sort -u)"
-    if [ -n "$pids" ]; then
-        busybox kill -9 $pids
-    else
-        busybox pkill -9 'frida-server'
-    fi
+    pids="$(frida_pids)"
+    [ -n "$pids" ] && kill -9 $pids
 }
 
 check_frida_is_up() {
